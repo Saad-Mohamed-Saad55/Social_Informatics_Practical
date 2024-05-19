@@ -30,3 +30,33 @@ print(myDataset.head())
 myDataset.to_csv('Cleaned_lung cancer.csv', index=False)
 
 print("\nDataset cleaning completed!")
+
+
+
+# =====================> Snippt code by Wasim Mahmoud <=====================
+
+import pandas as pd
+from sklearn.feature_selection import chi2, SelectKBest
+from sklearn.preprocessing import LabelEncoder
+
+# Load the data
+data = pd.read_csv('lung cancer.csv')
+
+# Separate features and target variable
+X = data.drop('LUNG_CANCER', axis=1)
+y = data['LUNG_CANCER']
+
+# Encode the "Gender" feature
+le = LabelEncoder()
+X["GENDER"] = le.fit_transform(X["GENDER"])
+
+# Feature selection using chi-square test
+chi2_selector = SelectKBest(chi2, k=10)
+
+# Fit the selector
+chi2_selector.fit(X, y)
+
+# Get selected features
+selected_features = X.columns[chi2_selector.get_support(indices=True)]
+
+print("Selected features using chi-square test:", selected_features)
