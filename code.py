@@ -138,3 +138,50 @@ y_pred = clf.predict(X_test)
 # Evaluate the model using accuracy score
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
+
+
+# =====================> Snippet code by Nader Gamal <=====================
+
+
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.metrics import accuracy_score
+
+# Load the data assuming it's in a CSV file named 'lung_cancer.csv'
+data = pd.read_csv('lung cancer.csv')
+
+# Separate features and target variable
+X = data.drop('LUNG_CANCER', axis=1)  # All columns except 'Lung Cancer'
+y = data['LUNG_CANCER']
+
+# Handle categorical features (e.g., Gender) using label encoding
+categorical_features = ['GENDER']  # Add other categorical features if needed
+le = LabelEncoder()
+for feature in categorical_features:
+    X[feature] = le.fit_transform(X[feature])
+
+# Create a StandardScaler object
+scaler = StandardScaler()
+
+# Fit the scaler on the features (now numerical)
+scaler.fit(X)
+
+# Transform the features using the fitted scaler
+X_scaled = scaler.transform(X)
+
+# Split data into training and testing sets (75% training, 25% testing)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.25, random_state=42)
+
+# Create an SVC object with a linear kernel
+clf = SVC(kernel='linear', random_state=42)
+
+# Train the model on the training data
+clf.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = clf.predict(X_test)
+
+# Evaluate the model using accuracy score
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
